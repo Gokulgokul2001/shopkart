@@ -29,6 +29,10 @@ public class ProductUpdateRequest {
 
     private Long categoryId;
 
+    // =========================================================
+    // GETTERS AND SETTERS
+    // =========================================================
+
     public String getName() {
         return name;
     }

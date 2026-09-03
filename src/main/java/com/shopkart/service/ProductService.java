@@ -22,8 +22,9 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository,
-                          CategoryRepository categoryRepository) {
+    public ProductService(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository) {
 
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
@@ -55,7 +56,8 @@ public class ProductService {
             product.setCategory(category);
         }
 
-        Product savedProduct = productRepository.save(product);
+        Product savedProduct =
+                productRepository.save(product);
 
         return mapToProductResponse(savedProduct);
     }
@@ -70,14 +72,8 @@ public class ProductService {
             String sortBy,
             String direction) {
 
-        validateSortField(sortBy);
-        validateSortDirection(direction);
-
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable =
+                createPageable(page, size, sortBy, direction);
 
         Page<Product> products =
                 productRepository.findAll(pageable);
@@ -91,12 +87,13 @@ public class ProductService {
 
     public ProductResponse getProductById(Long id) {
 
-        Product product = productRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new ProductNotFoundException(
-                                "Product not found with id : " + id
-                        ));
+        Product product =
+                productRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ProductNotFoundException(
+                                        "Product not found with id : "
+                                                + id
+                                ));
 
         return mapToProductResponse(product);
     }
@@ -109,12 +106,13 @@ public class ProductService {
             Long id,
             ProductUpdateRequest request) {
 
-        Product existingProduct = productRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new ProductNotFoundException(
-                                "Product not found with id : " + id
-                        ));
+        Product existingProduct =
+                productRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ProductNotFoundException(
+                                        "Product not found with id : "
+                                                + id
+                                ));
 
         existingProduct.setName(request.getName());
         existingProduct.setDescription(request.getDescription());
@@ -123,13 +121,14 @@ public class ProductService {
 
         if (request.getCategoryId() != null) {
 
-            Category category = categoryRepository
-                    .findById(request.getCategoryId())
-                    .orElseThrow(() ->
-                            new CategoryNotFoundException(
-                                    "Category not found with id : "
-                                            + request.getCategoryId()
-                            ));
+            Category category =
+                    categoryRepository
+                            .findById(request.getCategoryId())
+                            .orElseThrow(() ->
+                                    new CategoryNotFoundException(
+                                            "Category not found with id : "
+                                                    + request.getCategoryId()
+                                    ));
 
             existingProduct.setCategory(category);
         }
@@ -146,12 +145,13 @@ public class ProductService {
 
     public String deleteProduct(Long id) {
 
-        Product existingProduct = productRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new ProductNotFoundException(
-                                "Product not found with id : " + id
-                        ));
+        Product existingProduct =
+                productRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ProductNotFoundException(
+                                        "Product not found with id : "
+                                                + id
+                                ));
 
         productRepository.delete(existingProduct);
 
@@ -169,15 +169,8 @@ public class ProductService {
             String sortBy,
             String direction) {
 
-        validateSortField(sortBy);
-        validateSortDirection(direction);
-
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
         Pageable pageable =
-                PageRequest.of(page, size, sort);
+                createPageable(page, size, sortBy, direction);
 
         Page<Product> products =
                 productRepository
@@ -200,7 +193,6 @@ public class ProductService {
             String sortBy,
             String direction) {
 
-        // Check whether category exists
         categoryRepository
                 .findById(categoryId)
                 .orElseThrow(() ->
@@ -209,15 +201,8 @@ public class ProductService {
                                         + categoryId
                         ));
 
-        validateSortField(sortBy);
-        validateSortDirection(direction);
-
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
         Pageable pageable =
-                PageRequest.of(page, size, sort);
+                createPageable(page, size, sortBy, direction);
 
         Page<Product> products =
                 productRepository.findByCategoryId(
@@ -297,18 +282,11 @@ public class ProductService {
         }
 
         // -----------------------------------------------------
-        // Validate sorting
+        // Create pageable
         // -----------------------------------------------------
 
-        validateSortField(sortBy);
-        validateSortDirection(direction);
-
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
         Pageable pageable =
-                PageRequest.of(page, size, sort);
+                createPageable(page, size, sortBy, direction);
 
         Page<Product> products;
 
@@ -387,10 +365,10 @@ public class ProductService {
             String sortBy,
             String direction) {
 
-        validateSortField(sortBy);
-        validateSortDirection(direction);
-
+        // -----------------------------------------------------
         // Validate price
+        // -----------------------------------------------------
+
         if (minPrice == null || maxPrice == null) {
 
             throw new IllegalArgumentException(
@@ -412,12 +390,12 @@ public class ProductService {
             );
         }
 
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
+        // -----------------------------------------------------
+        // Create pageable
+        // -----------------------------------------------------
 
         Pageable pageable =
-                PageRequest.of(page, size, sort);
+                createPageable(page, size, sortBy, direction);
 
         Page<Product> products =
                 productRepository.findByPriceBetween(
@@ -427,6 +405,27 @@ public class ProductService {
                 );
 
         return products.map(this::mapToProductResponse);
+    }
+
+    // =========================================================
+    // CREATE PAGEABLE
+    // =========================================================
+
+    private Pageable createPageable(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        validateSortField(sortBy);
+        validateSortDirection(direction);
+
+        Sort sort =
+                direction.equalsIgnoreCase("desc")
+                        ? Sort.by(sortBy).descending()
+                        : Sort.by(sortBy).ascending();
+
+        return PageRequest.of(page, size, sort);
     }
 
     // =========================================================

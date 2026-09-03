@@ -31,6 +31,10 @@ public class ProductResponse {
         this.categoryName = categoryName;
     }
 
+    // =========================================================
+    // GETTERS
+    // =========================================================
+
     public Long getId() {
         return id;
     }

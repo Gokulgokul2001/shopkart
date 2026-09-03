@@ -3,6 +3,7 @@ package com.shopkart.controller;
 import com.shopkart.dto.ProductRequest;
 import com.shopkart.dto.ProductResponse;
 import com.shopkart.dto.ProductUpdateRequest;
+import com.shopkart.response.ApiResponse;
 import com.shopkart.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -15,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(
@@ -41,21 +41,20 @@ public class ProductController {
             summary = "Create a product",
             description = "Creates a new product and validates its category"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
             description = "Product created successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid product data"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Category not found"
     )
     @PostMapping
-    public ResponseEntity<com.shopkart.response.ApiResponse<ProductResponse>>
-    createProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
             @Valid @RequestBody ProductRequest request) {
 
         ProductResponse createdProduct =
@@ -64,7 +63,7 @@ public class ProductController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
-                        new com.shopkart.response.ApiResponse<>(
+                        new ApiResponse<>(
                                 201,
                                 "Product created successfully",
                                 createdProduct
@@ -80,17 +79,16 @@ public class ProductController {
             summary = "Get all products",
             description = "Returns products with pagination and sorting"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Products retrieved successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid pagination or sorting parameters"
     )
     @GetMapping
-    public com.shopkart.response.ApiResponse<Page<ProductResponse>>
-    getAllProducts(
+    public ApiResponse<Page<ProductResponse>> getAllProducts(
 
             @RequestParam(defaultValue = "0")
             @Min(
@@ -120,7 +118,7 @@ public class ProductController {
                         direction
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Products retrieved successfully",
                 products
@@ -135,23 +133,22 @@ public class ProductController {
             summary = "Get product by ID",
             description = "Returns a product using its ID"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Product found successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Product not found"
     )
     @GetMapping("/{id}")
-    public com.shopkart.response.ApiResponse<ProductResponse>
-    getProductById(
+    public ApiResponse<ProductResponse> getProductById(
             @PathVariable Long id) {
 
         ProductResponse product =
                 productService.getProductById(id);
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Product retrieved successfully",
                 product
@@ -166,21 +163,20 @@ public class ProductController {
             summary = "Update a product",
             description = "Updates an existing product"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Product updated successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid product data"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Product or category not found"
     )
     @PutMapping("/{id}")
-    public com.shopkart.response.ApiResponse<ProductResponse>
-    updateProduct(
+    public ApiResponse<ProductResponse> updateProduct(
 
             @PathVariable Long id,
 
@@ -192,7 +188,7 @@ public class ProductController {
                         request
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Product updated successfully",
                 updatedProduct
@@ -207,23 +203,22 @@ public class ProductController {
             summary = "Delete a product",
             description = "Deletes a product using its ID"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Product deleted successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Product not found"
     )
     @DeleteMapping("/{id}")
-    public com.shopkart.response.ApiResponse<String>
-    deleteProduct(
+    public ApiResponse<String> deleteProduct(
             @PathVariable Long id) {
 
         String message =
                 productService.deleteProduct(id);
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 message,
                 null
@@ -238,17 +233,16 @@ public class ProductController {
             summary = "Search products by name",
             description = "Searches products using a case-insensitive name"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Products retrieved successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid pagination or sorting parameters"
     )
     @GetMapping("/search")
-    public com.shopkart.response.ApiResponse<Page<ProductResponse>>
-    searchProducts(
+    public ApiResponse<Page<ProductResponse>> searchProducts(
 
             @RequestParam
             String name,
@@ -282,7 +276,7 @@ public class ProductController {
                         direction
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Products retrieved successfully",
                 products
@@ -297,21 +291,20 @@ public class ProductController {
             summary = "Get products by category",
             description = "Returns products belonging to a specific category"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Products retrieved successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid pagination or sorting parameters"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Category not found"
     )
     @GetMapping("/category/{categoryId}")
-    public com.shopkart.response.ApiResponse<Page<ProductResponse>>
-    getProductByCategory(
+    public ApiResponse<Page<ProductResponse>> getProductsByCategory(
 
             @PathVariable Long categoryId,
 
@@ -344,7 +337,7 @@ public class ProductController {
                         direction
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Products retrieved successfully",
                 products
@@ -359,17 +352,16 @@ public class ProductController {
             summary = "Filter products",
             description = "Filters products by price range and quantity range with pagination and sorting"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Filtered products retrieved successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid filter, pagination, or sorting parameters"
     )
     @GetMapping("/filter")
-    public com.shopkart.response.ApiResponse<Page<ProductResponse>>
-    filterProducts(
+    public ApiResponse<Page<ProductResponse>> filterProducts(
 
             @RequestParam(required = false)
             Double minPrice,
@@ -415,7 +407,7 @@ public class ProductController {
                         direction
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Products filtered successfully",
                 products
@@ -430,17 +422,16 @@ public class ProductController {
             summary = "Get products by price range",
             description = "Returns a paginated list of products whose price falls between the given minimum and maximum price"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Products retrieved successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid price range, pagination, or sorting parameters"
     )
     @GetMapping("/price")
-    public com.shopkart.response.ApiResponse<Page<ProductResponse>>
-    getProductsByPriceRange(
+    public ApiResponse<Page<ProductResponse>> getProductsByPriceRange(
 
             @RequestParam Double minPrice,
 
@@ -476,7 +467,7 @@ public class ProductController {
                         direction
                 );
 
-        return new com.shopkart.response.ApiResponse<>(
+        return new ApiResponse<>(
                 200,
                 "Products retrieved successfully",
                 products

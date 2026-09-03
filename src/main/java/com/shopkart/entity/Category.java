@@ -1,7 +1,12 @@
 package com.shopkart.entity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "categories")
@@ -21,6 +26,10 @@ public class Category {
             example = "Electronic Devices"
     )
     private String name;
+
+    // =========================================================
+    // GETTERS AND SETTERS
+    // =========================================================
 
     public Long getId() {
         return id;

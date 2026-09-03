@@ -1,15 +1,22 @@
 package com.shopkart.entity;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.*;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(
@@ -55,7 +62,11 @@ public class Product {
     )
     private Category category;
 
-    public Long getId(){
+    // =========================================================
+    // GETTERS AND SETTERS
+    // =========================================================
+
+    public Long getId() {
         return id;
     }
 

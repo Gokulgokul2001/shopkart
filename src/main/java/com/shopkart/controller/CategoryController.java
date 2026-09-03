@@ -1,6 +1,7 @@
 package com.shopkart.controller;
 
 import com.shopkart.entity.Category;
+import com.shopkart.response.ApiResponse;
 import com.shopkart.service.CategoryService;
 
 import jakarta.validation.Valid;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.util.List;
 
@@ -29,143 +29,176 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // 1. Create Category
+    // =========================================================
+    // CREATE CATEGORY
+    // =========================================================
+
     @Operation(
             summary = "Create a new category",
             description = "Creates a new product category."
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
             description = "Category created successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid category data"
     )
     @PostMapping
-    public ResponseEntity<com.shopkart.response.ApiResponse<Category>> createCategory(
+    public ResponseEntity<ApiResponse<Category>> createCategory(
             @Valid @RequestBody Category category) {
 
-        Category createdCategory = categoryService.createCategory(category);
+        Category createdCategory =
+                categoryService.createCategory(category);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new com.shopkart.response.ApiResponse<>(
-                        201,
-                        "Category created successfully",
-                        createdCategory
-                ));
+                .body(
+                        new ApiResponse<>(
+                                201,
+                                "Category created successfully",
+                                createdCategory
+                        )
+                );
     }
 
-    // 2. Get all Categories
+    // =========================================================
+    // GET ALL CATEGORIES
+    // =========================================================
+
     @Operation(
             summary = "Get all categories",
             description = "Returns a list of all product categories."
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Categories retrieved successfully"
     )
     @GetMapping
-    public ResponseEntity<com.shopkart.response.ApiResponse<List<Category>>> getAllCategories() {
+    public ResponseEntity<ApiResponse<List<Category>>> getAllCategories() {
 
-        List<Category> categories = categoryService.getAllCategories();
+        List<Category> categories =
+                categoryService.getAllCategories();
 
         return ResponseEntity
-                .ok(new com.shopkart.response.ApiResponse<>(
-                        200,
-                        "Categories retrieved successfully",
-                        categories
-                ));
+                .ok(
+                        new ApiResponse<>(
+                                200,
+                                "Categories retrieved successfully",
+                                categories
+                        )
+                );
     }
 
-    // 3. Get category by ID
+    // =========================================================
+    // GET CATEGORY BY ID
+    // =========================================================
+
     @Operation(
             summary = "Get category by ID",
             description = "Returns a product category using its unique ID."
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Category found successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Category not found"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<com.shopkart.response.ApiResponse<Category>> getCategoryById(
+    public ResponseEntity<ApiResponse<Category>> getCategoryById(
             @PathVariable Long id) {
 
-        Category category = categoryService.getCategoryById(id);
+        Category category =
+                categoryService.getCategoryById(id);
 
         return ResponseEntity
-                .ok(new com.shopkart.response.ApiResponse<>(
-                        200,
-                        "Category retrieved successfully",
-                        category
-                ));
+                .ok(
+                        new ApiResponse<>(
+                                200,
+                                "Category retrieved successfully",
+                                category
+                        )
+                );
     }
 
-    // 4. Update Category
+    // =========================================================
+    // UPDATE CATEGORY
+    // =========================================================
+
     @Operation(
             summary = "Update category",
             description = "Updates an existing product category using its ID."
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Category updated successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
             description = "Invalid category data"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Category not found"
     )
     @PutMapping("/{id}")
-    public ResponseEntity<com.shopkart.response.ApiResponse<Category>> updateCategory(
+    public ResponseEntity<ApiResponse<Category>> updateCategory(
             @PathVariable Long id,
             @Valid @RequestBody Category category) {
 
-        Category updatedCategory = categoryService.updateCategory(id, category);
+        Category updatedCategory =
+                categoryService.updateCategory(
+                        id,
+                        category
+                );
 
         return ResponseEntity
-                .ok(new com.shopkart.response.ApiResponse<>(
-                        200,
-                        "Category updated successfully",
-                        updatedCategory
-                ));
+                .ok(
+                        new ApiResponse<>(
+                                200,
+                                "Category updated successfully",
+                                updatedCategory
+                        )
+                );
     }
 
-    // 5. Delete Category
+    // =========================================================
+    // DELETE CATEGORY
+    // =========================================================
+
     @Operation(
             summary = "Delete category",
             description = "Deletes a category if no products are currently using it."
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Category deleted successfully"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
             description = "Category not found"
     )
-    @ApiResponse(
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "409",
             description = "Category cannot be deleted because products are using it"
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<com.shopkart.response.ApiResponse<String>> deleteCategory(
+    public ResponseEntity<ApiResponse<String>> deleteCategory(
             @PathVariable Long id) {
 
-        String message = categoryService.deleteCategory(id);
+        String message =
+                categoryService.deleteCategory(id);
 
         return ResponseEntity
-                .ok(new com.shopkart.response.ApiResponse<>(
-                        200,
-                        "Category deleted successfully",
-                        message
-                ));
+                .ok(
+                        new ApiResponse<>(
+                                200,
+                                "Category deleted successfully",
+                                message
+                        )
+                );
     }
 }
